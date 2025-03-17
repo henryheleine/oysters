@@ -28,7 +28,9 @@ struct ContentView: View {
                         HStack {
                             Spacer()
                             Button {
-                                print("clear")
+                                self.image = nil
+                                self.outcome = nil
+                                self.pickerItem = nil
                             } label: {
                                 Image(systemName: "xmark").foregroundStyle(.white)
                             }
@@ -64,8 +66,10 @@ struct ContentView: View {
             }
         }
         .onChange(of: image) {
-            Task {
-                await requestInfo()
+            if let _ = image {
+                Task {
+                    await requestInfo()
+                }
             }
         }
     }
