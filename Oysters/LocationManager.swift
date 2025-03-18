@@ -20,7 +20,7 @@ final class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObje
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
         case .restricted, .denied, .authorizedAlways:
-            print("do nothing")
+            self.country = "unknown"
         case .authorizedWhenInUse:
             lastKnownLocation = manager.location?.coordinate
         @unknown default:

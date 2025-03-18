@@ -13,16 +13,21 @@ struct ContentView: View {
     @State private var pickerItem: PhotosPickerItem?
     @State private var image: Image?
     @State private var outcome: String?
+    private var BackgroundColor = Color(red: 201/256, green: 160/256, blue: 220/256, opacity: 1)
     private var base64ImageData: String?
+    
     
     var body: some View {
         ZStack {
-            Color(red: 201/256, green: 160/256, blue: 220/256, opacity: 1)
+            BackgroundColor
             VStack(spacing: 10) {
-                Spacer().frame(height: 15)
+                Spacer().frame(height: 60)
                 Text("Oyster Identification")
+                
                 if let country = locationManager.country {
-                    Text("Location: \(country)")
+                    if country != "unknown" {
+                        Text("Location: \(country)")
+                    }
                     if let image = image {
                         Text("Picture:")
                         HStack {
@@ -37,14 +42,7 @@ struct ContentView: View {
                             Spacer().frame(width: 15)
                         }
                         image.resizable().scaledToFit()
-                        Text("Response:")
-                        if let outcome = outcome {
-                            ScrollView {
-                                Text(outcome)
-                            }
-                        } else {
-                            ProgressView()
-                        }
+                        OutcomeView(outcome: outcome)
                     } else {
                         PhotosPicker("Select a picture", selection: $pickerItem)
                     }
@@ -57,6 +55,7 @@ struct ContentView: View {
             }
             .font(Font.system(size: 24))
         }
+        .ignoresSafeArea()
         .onAppear() {
             URLSession.shared.dataTask(with: URLRequest(url: URL(string: "https://render-4ezx.onrender.com/")!)).resume()
         }
