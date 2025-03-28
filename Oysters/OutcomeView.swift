@@ -16,13 +16,13 @@ struct OutcomeView: View {
         Group {
             Text("Response:")
             if let content = content {
-                ScrollView {
-                    Text(content)
-                }
+                Text(content)
+                    .padding([.leading, .bottom, .trailing], 15)
             } else {
-                ProgressView().padding(.top, 15)
+                ProgressView()
             }
         }
+        .padding(.top, 10)
         .onReceive(model.$response) { response in
             if let response = response {
                 content = response.content

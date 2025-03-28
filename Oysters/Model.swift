@@ -85,6 +85,7 @@ class Model: ObservableObject {
     func reset() {
         image = nil
         response = nil
+        cancellables.first?.cancel()
     }
     
     private func updateErrorResponse() {

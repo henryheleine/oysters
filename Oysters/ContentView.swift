@@ -21,9 +21,10 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             Color(red: 201/256, green: 172/256, blue: 172/256, opacity: 1)
-            VStack(spacing: 10) {
+            ScrollView() {
                 Text("Oyster Identification")
                     .padding(.top, 60)
+                    .padding(.bottom, 5)
                 if locationManager.hasLocation {
                     Text("Location: \(locationManager.country)")
                         .padding(.bottom, 15)
@@ -39,7 +40,12 @@ struct ContentView: View {
                             }
                             .padding(.trailing, 15)
                         }
-                        image.resizable().scaledToFit().clipShape(RoundedRectangle(cornerRadius: 5)).frame(width: 500, height: 500).padding(.bottom, 15)
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                            .frame(width: dimensionForDevice(), height: dimensionForDevice())
+                            .padding(.bottom, 15)
                         OutcomeView(model: model)
                     } else {
                         PhotosPicker("Tap to select picture", selection: $pickerItem)
@@ -67,6 +73,10 @@ struct ContentView: View {
                 }
             }
         }
+    }
+    
+    private func dimensionForDevice() -> CGFloat {
+        return UIDevice.current.userInterfaceIdiom == .phone ? 300 : 500
     }
     
     private func reset() {
