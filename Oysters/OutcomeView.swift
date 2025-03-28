@@ -20,7 +20,7 @@ struct OutcomeView: View {
                     Text(content)
                 }
             } else {
-                ProgressView()
+                ProgressView().padding(.top, 15)
             }
         }
         .onReceive(model.$response) { response in

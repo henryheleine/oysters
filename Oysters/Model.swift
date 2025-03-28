@@ -50,12 +50,13 @@ class Model: ObservableObject {
                 .decode(type: OpenApiResponse.self, decoder: JSONDecoder())
                 .eraseToAnyPublisher()
                 .sink(
-                    receiveCompletion: { status in
+                    receiveCompletion: { [weak self] status in
+                        guard let weakSelf = self else { return }
                         switch status {
                         case .finished:
                             break
-                        case .failure(let error):
-                            print("ERROR: \(error)")
+                        case .failure(_):
+                            weakSelf.updateErrorResponse()
                             break
                         }
                     },
@@ -66,8 +67,8 @@ class Model: ObservableObject {
                     }
                 )
                 .store(in: &cancellables)
-        } catch let error {
-            print(error)
+        } catch _ {
+            updateErrorResponse()
         }
     }
     
@@ -84,5 +85,11 @@ class Model: ObservableObject {
     func reset() {
         image = nil
         response = nil
+    }
+    
+    private func updateErrorResponse() {
+        Task { @MainActor in
+            self.response = OpenApiResponse(content: "Information is not available at this time. Please check your internet connection and try again later.")
+        }
     }
 }

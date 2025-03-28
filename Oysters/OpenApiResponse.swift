@@ -9,4 +9,8 @@ import Foundation
 
 class OpenApiResponse: Codable, ObservableObject {
     let content: String
+    
+    init(content: String) {
+        self.content = content
+    }
 }

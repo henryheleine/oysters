@@ -26,6 +26,7 @@ struct ContentView: View {
                     .padding(.top, 60)
                 if locationManager.hasLocation {
                     Text("Location: \(locationManager.country)")
+                        .padding(.bottom, 15)
                     if let image = model.image {
                         HStack {
                             Spacer()
@@ -38,13 +39,13 @@ struct ContentView: View {
                             }
                             .padding(.trailing, 15)
                         }
-                        image.resizable().scaledToFit().frame(width: 500, height: 500)
+                        image.resizable().scaledToFit().clipShape(RoundedRectangle(cornerRadius: 5)).frame(width: 500, height: 500).padding(.bottom, 15)
                         OutcomeView(model: model)
                     } else {
                         PhotosPicker("Tap to select picture", selection: $pickerItem)
                     }
                 } else {
-                    Button("Add optional location? (better precision)") {
+                    Button("Add location? (better precision)") {
                         locationManager.checkLocationAuthorization()
                     }
                 }

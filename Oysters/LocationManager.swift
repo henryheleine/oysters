@@ -25,6 +25,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
         manager.startUpdatingLocation()
         switch manager.authorizationStatus {
         case .authorizedWhenInUse, .authorizedAlways, .denied, .restricted:
+            self.hasLocation = true
             break
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
@@ -42,6 +43,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
         
         let location = CLLocation(latitude: first.latitude, longitude: first.longitude)
         CLGeocoder().reverseGeocodeLocation(location, completionHandler: { (placemarks, error) -> Void in
+            guard error == nil else { return }
             guard let placemarks = placemarks else { return }
             guard placemarks.count > 0 else { return }
             guard let country = placemarks[0].country else { return }
