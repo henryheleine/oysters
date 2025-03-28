@@ -9,45 +9,42 @@ import PhotosUI
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var locationManager = LocationManager()
+    @ObservedObject var locationManager: LocationManager
+    @ObservedObject var model: Model
     @State private var pickerItem: PhotosPickerItem?
-    @State private var image: Image?
-    @State private var outcome: String?
-    private var BackgroundColor = Color(red: 201/256, green: 160/256, blue: 220/256, opacity: 1)
-    private var base64ImageData: String?
     
+    init(locationManager: LocationManager = LocationManager()) {
+        self.locationManager = locationManager
+        self.model = Model(locationManager: locationManager)
+    }
     
     var body: some View {
         ZStack {
-            BackgroundColor
+            Color(red: 201/256, green: 172/256, blue: 172/256, opacity: 1)
             VStack(spacing: 10) {
-                Spacer().frame(height: 60)
                 Text("Oyster Identification")
-                
-                if let country = locationManager.country {
-                    if country != "unknown" {
-                        Text("Location: \(country)")
-                    }
-                    if let image = image {
-                        Text("Picture:")
+                    .padding(.top, 60)
+                if locationManager.hasLocation {
+                    Text("Location: \(locationManager.country)")
+                    if let image = model.image {
                         HStack {
                             Spacer()
+                            Text("Picture:")
+                            Spacer()
                             Button {
-                                self.image = nil
-                                self.outcome = nil
-                                self.pickerItem = nil
+                                reset()
                             } label: {
-                                Image(systemName: "xmark").foregroundStyle(.white)
+                                Image(systemName: "xmark")
                             }
-                            Spacer().frame(width: 15)
+                            .padding(.trailing, 15)
                         }
-                        image.resizable().scaledToFit()
-                        OutcomeView(outcome: outcome)
+                        image.resizable().scaledToFit().frame(width: 500, height: 500)
+                        OutcomeView(model: model)
                     } else {
-                        PhotosPicker("Select a picture", selection: $pickerItem)
+                        PhotosPicker("Tap to select picture", selection: $pickerItem)
                     }
                 } else {
-                    Button("Tap to get location (better precision)") {
+                    Button("Add optional location? (better precision)") {
                         locationManager.checkLocationAuthorization()
                     }
                 }
@@ -57,62 +54,23 @@ struct ContentView: View {
         }
         .ignoresSafeArea()
         .onAppear() {
-            URLSession.shared.dataTask(with: URLRequest(url: URL(string: "https://render-4ezx.onrender.com/")!)).resume()
+            let task = URLSession.shared.dataTask(with: URLRequest(url: URL(string: "https://render-4ezx.onrender.com/")!))
+            task.resume()
         }
         .onChange(of: pickerItem) {
             Task {
-                image = try await pickerItem?.loadTransferable(type: Image.self)
-            }
-        }
-        .onChange(of: image) {
-            if let _ = image {
+                model.image = try await pickerItem?.loadTransferable(type: Image.self)
                 Task {
-                    await requestInfo()
+                    guard let _ = model.image else { return }
+                    await model.requestInfo()
                 }
             }
         }
     }
     
-    private func base64(fromImage: Image?) async -> String {
-        let render = ImageRenderer(content: image!.resizable().frame(width: 250, height: 250))
-        render.isOpaque = true
-        let uiImage = render.uiImage!
-        if let data = uiImage.jpegData(compressionQuality: 1) {
-            return data.base64EncodedString()
-        }
-        return ""
-    }
-    
-    nonisolated func requestInfo() async {
-        var request = URLRequest(url: URL(string: "https://render-4ezx.onrender.com/data")!)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        do {
-            var json = [String: String]()
-            json["imageData"] = await base64(fromImage: image)
-            json["country"] = await locationManager.country
-            let jsonData = try JSONEncoder().encode(json)
-            request.httpBody = jsonData
-        } catch {
-            print("Error encoding JSON: \(error)")
-            return
-        }
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("Network error: \(error)")
-                return
-            }
-            guard let httpResponse = response as? HTTPURLResponse else { return }
-            if httpResponse.statusCode == 200 {
-                if let data = data, let response = String(data: data, encoding: .utf8) {
-                    Task { @MainActor in
-                        outcome = response
-                    }
-                }
-            } else {
-                print("POST request failed with status code: \(httpResponse.statusCode)")
-            }
-        }.resume()
+    private func reset() {
+        model.reset()
+        pickerItem = PhotosPickerItem(itemIdentifier: "\(UUID())")
     }
 }
 

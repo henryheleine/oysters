@@ -5,26 +5,31 @@
 //  Created by Henry Heleine on 3/17/25.
 //
 
-import Foundation
 import CoreLocation
+import Foundation
+import SwiftUI
 
-final class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
-    @Published var lastKnownLocation: CLLocationCoordinate2D?
-    @Published var country: String?
-    var manager = CLLocationManager()
+class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
+    private var manager: CLLocationManager
+    @Published public var country: String
+    @Published public var hasLocation: Bool
+    
+    init(manager: CLLocationManager = CLLocationManager(), country: String = "Unknown", hasLocation: Bool = false) {
+        self.manager = manager
+        self.country = country
+        self.hasLocation = hasLocation
+    }
     
     func checkLocationAuthorization() {
         manager.delegate = self
         manager.startUpdatingLocation()
         switch manager.authorizationStatus {
+        case .authorizedWhenInUse, .authorizedAlways, .denied, .restricted:
+            break
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
-        case .restricted, .denied, .authorizedAlways:
-            self.country = "unknown"
-        case .authorizedWhenInUse:
-            lastKnownLocation = manager.location?.coordinate
         @unknown default:
-            print("Location service disabled")
+            break
         }
     }
     
@@ -33,18 +38,18 @@ final class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObje
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        lastKnownLocation = locations.first?.coordinate
-        if let lastKnownLocation = lastKnownLocation {
-            let geoCoder = CLGeocoder()
-            let location = CLLocation(latitude: lastKnownLocation.latitude, longitude: lastKnownLocation.longitude)
-            geoCoder.reverseGeocodeLocation(location, completionHandler: { (placemarks, error) -> Void in
-                if let placemarks = placemarks, placemarks.count > 0 {
-                    let placemark = placemarks[0]
-                    if let country = placemark.country {
-                        self.country = country
-                    }
-                }
-            })
-        }
+        guard let first = locations.first?.coordinate else { return }
+        
+        let location = CLLocation(latitude: first.latitude, longitude: first.longitude)
+        CLGeocoder().reverseGeocodeLocation(location, completionHandler: { (placemarks, error) -> Void in
+            guard let placemarks = placemarks else { return }
+            guard placemarks.count > 0 else { return }
+            guard let country = placemarks[0].country else { return }
+            
+            self.country = country
+            self.hasLocation = true
+        })
+        
+        manager.stopUpdatingLocation()
     }
 }
