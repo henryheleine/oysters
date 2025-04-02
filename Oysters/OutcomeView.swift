@@ -18,6 +18,7 @@ struct OutcomeView: View {
             if let content = content {
                 Text(content)
                     .padding([.leading, .bottom, .trailing], 15)
+                    .accessibilityLabel(content)
             } else {
                 ProgressView()
             }

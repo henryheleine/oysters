@@ -20,16 +20,20 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            Color(red: 201/256, green: 172/256, blue: 172/256, opacity: 1)
+            Color("Background")
             ScrollView() {
                 Text("Oyster Identification")
                     .padding(.top, 60)
                     .padding(.bottom, 5)
+                    .accessibilityLabel("Oyster Identification")
                 if locationManager.hasLocation {
                     Text("Location: \(locationManager.country)")
                         .padding(.bottom, 15)
                     if let image = model.image {
                         HStack {
+                            Text("")
+                                .padding(.leading, 50)
+                                .foregroundStyle(Color("Background"))
                             Spacer()
                             Text("Picture:")
                             Spacer()
