@@ -15,3 +15,6 @@ struct OystersApp: App {
         }
     }
 }
+
+// example product page URL = https://apps.apple.com/us/app/oyster-identification/id6743009625?ppid=cd8ba950-84f2-4f49-8ab4-686cc9df48df
+

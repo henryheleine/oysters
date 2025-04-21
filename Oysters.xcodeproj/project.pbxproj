@@ -34,9 +34,22 @@
 		DE1B35C62D682861003736C1 /* Oysters-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Oysters-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		DEE266212DB69FB700E49E34 /* Exceptions for "Oysters" folder in "OystersTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				LocationView.swift,
+			);
+			target = DE1B35A82D682833003736C1 /* OystersTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		DE1B359A2D682832003736C1 /* Oysters */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DEE266212DB69FB700E49E34 /* Exceptions for "Oysters" folder in "OystersTests" target */,
+			);
 			path = Oysters;
 			sourceTree = "<group>";
 		};
@@ -397,7 +410,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Oysters/Oysters.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"Oysters/Preview Content\"";
 				DEVELOPMENT_TEAM = PP5D6ER394;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -437,7 +450,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Oysters/Oysters.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"Oysters/Preview Content\"";
 				DEVELOPMENT_TEAM = PP5D6ER394;
 				ENABLE_HARDENED_RUNTIME = YES;

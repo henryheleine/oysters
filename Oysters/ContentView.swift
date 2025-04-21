@@ -20,50 +20,49 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            Color("Background")
+            Color("Background").ignoresSafeArea()
             ScrollView() {
                 Text("Oyster Identification")
+                    .font(Font.system(size: 36, weight: .bold))
+                    .foregroundStyle(Color.text)
                     .padding(.top, 60)
                     .padding(.bottom, 5)
                     .accessibilityLabel("Oyster Identification")
-                if locationManager.hasLocation {
-                    Text("Location: \(locationManager.country)")
-                        .padding(.bottom, 15)
-                    if let image = model.image {
-                        HStack {
-                            Text("")
-                                .padding(.leading, 50)
-                                .foregroundStyle(Color("Background"))
-                            Spacer()
-                            Text("Picture:")
-                            Spacer()
-                            Button {
-                                reset()
-                            } label: {
-                                Image(systemName: "xmark")
-                            }
-                            .padding(.trailing, 15)
+                LocationView(locationManager: locationManager, model: model)
+                Spacer()
+                    .frame(height: 30)
+                if let image = model.image {
+                    HStack {
+                        Text("")
+                            .padding(.leading, 50)
+                            .foregroundStyle(Color.background)
+                        Spacer()
+                        Text("Picture:")
+                            .foregroundStyle(Color.text)
+                        Spacer()
+                        Button {
+                            reset()
+                        } label: {
+                            Image(systemName: "xmark")
+                                .foregroundStyle(Color.text)
                         }
-                        image
-                            .resizable()
-                            .scaledToFit()
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
-                            .frame(width: dimensionForDevice(), height: dimensionForDevice())
-                            .padding(.bottom, 15)
-                        OutcomeView(model: model)
-                    } else {
-                        PhotosPicker("Tap to select picture", selection: $pickerItem)
+                        .padding(.trailing, 15)
                     }
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        .frame(width: dimensionForDevice(), height: dimensionForDevice())
+                        .padding(.bottom, 15)
+                    OutcomeView(model: model)
                 } else {
-                    Button("Add location? (better precision)") {
-                        locationManager.checkLocationAuthorization()
-                    }
+                    Spacer().frame(height: 180)
+                    PhotosPicker("Tap to select picture", selection: $pickerItem)
                 }
                 Spacer()
             }
             .font(Font.system(size: 24))
         }
-        .ignoresSafeArea()
         .onAppear() {
             let task = URLSession.shared.dataTask(with: URLRequest(url: URL(string: "https://render-4ezx.onrender.com/")!))
             task.resume()

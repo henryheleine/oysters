@@ -13,17 +13,22 @@ struct OutcomeView: View {
     @State var content: String?
     
     var body: some View {
-        Group {
+        VStack {
             Text("Response:")
+                .padding(.bottom, 2)
+                .padding(.top, 10)
             if let content = content {
                 Text(content)
-                    .padding([.leading, .bottom, .trailing], 15)
                     .accessibilityLabel(content)
+                    .padding([.bottom, .leading, .trailing], 15)
             } else {
                 ProgressView()
             }
         }
-        .padding(.top, 10)
+        .background(Color.outcome)
+        .clipShape(RoundedRectangle(cornerRadius: 5))
+        .foregroundStyle(Color.background)
+        .padding([.leading, .trailing], 15)
         .onReceive(model.$response) { response in
             if let response = response {
                 content = response.content
