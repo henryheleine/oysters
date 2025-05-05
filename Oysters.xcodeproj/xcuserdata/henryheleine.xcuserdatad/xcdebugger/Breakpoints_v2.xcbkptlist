@@ -3,4 +3,126 @@
    uuid = "92C5754D-971D-4B38-870E-47C1686A4DC3"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "931E9802-152C-451A-A484-DC1D03F3D9D9"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Oysters/ViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "42"
+            endingLineNumber = "42"
+            landmarkName = "requestInfo(completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "931E9802-152C-451A-A484-DC1D03F3D9D9 - e8e3d1a2ea2b2dba"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 ((data: Foundation.Data, response: __C.NSURLResponse)) throws -&gt; Foundation.Data in Oysters.ViewModel.requestInfo(completion: Swift.Optional&lt;() -&gt; ()&gt;) async -&gt; ()"
+                  moduleName = "Oysters.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/henryheleine/Documents/swiftui/Oysters/Oysters/ViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "42"
+                  endingLineNumber = "42">
+               </Location>
+               <Location
+                  uuid = "931E9802-152C-451A-A484-DC1D03F3D9D9 - e8e3d1a2ea2b2dba"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 ((data: Foundation.Data, response: __C.NSURLResponse)) throws -&gt; Foundation.Data in Oysters.ViewModel.requestInfo(completion: Swift.Optional&lt;() -&gt; ()&gt;) async -&gt; ()"
+                  moduleName = "Oysters.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/henryheleine/Documents/swiftui/Oysters/Oysters/ViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "42"
+                  endingLineNumber = "42">
+               </Location>
+               <Location
+                  uuid = "931E9802-152C-451A-A484-DC1D03F3D9D9 - c56ecaf681916a91"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 ((data: Foundation.Data, response: __C.NSURLResponse)) throws -&gt; Foundation.Data in OystersTests.ViewModel.requestInfo(completion: Swift.Optional&lt;() -&gt; ()&gt;) async -&gt; ()"
+                  moduleName = "OystersTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/henryheleine/Documents/swiftui/Oysters/Oysters/ViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "42"
+                  endingLineNumber = "42">
+               </Location>
+               <Location
+                  uuid = "931E9802-152C-451A-A484-DC1D03F3D9D9 - c56ecaf681916a91"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 ((data: Foundation.Data, response: __C.NSURLResponse)) throws -&gt; Foundation.Data in OystersTests.ViewModel.requestInfo(completion: Swift.Optional&lt;() -&gt; ()&gt;) async -&gt; ()"
+                  moduleName = "OystersTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/henryheleine/Documents/swiftui/Oysters/Oysters/ViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "42"
+                  endingLineNumber = "42">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "75EFA77D-6EA0-45DD-9BA0-410282A57C45"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Oysters/ViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
+            landmarkName = "requestInfo(completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "75EFA77D-6EA0-45DD-9BA0-410282A57C45 - e00c0b1cd6ed45aa"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for Oysters.ViewModel.requestInfo(completion: Swift.Optional&lt;() -&gt; ()&gt;) async -&gt; ()"
+                  moduleName = "Oysters.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/henryheleine/Documents/swiftui/Oysters/Oysters/ViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "73"
+                  endingLineNumber = "73">
+               </Location>
+               <Location
+                  uuid = "75EFA77D-6EA0-45DD-9BA0-410282A57C45 - 5fb7390d1b29522e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for OystersTests.ViewModel.requestInfo(completion: Swift.Optional&lt;() -&gt; ()&gt;) async -&gt; ()"
+                  moduleName = "OystersTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/henryheleine/Documents/swiftui/Oysters/Oysters/ViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "73"
+                  endingLineNumber = "73">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

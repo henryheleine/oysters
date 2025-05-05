@@ -10,18 +10,16 @@ import SwiftUI
 
 struct LocationView: View {
     @ObservedObject var locationManager: LocationManager
-    @ObservedObject var model: Model
+    @ObservedObject var viewModel: ViewModel
     
     var body: some View {
         if locationManager.hasLocation {
-            Text("Location: \(locationManager.country)")
-                .padding(.bottom, 15)
-                .foregroundStyle(Color.text)
+            Text("Location: \(locationManager.country)").padding(.bottom, 15).foregroundStyle(Color(UIColor.darkGray))
         } else {
             Button("Add location\n(improved precision)") {
                 locationManager.checkLocationAuthorization()
             }
-            .disabled(model.image != nil)
+            .disabled(viewModel.image != nil)
         }
     }
 }

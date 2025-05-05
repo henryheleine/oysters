@@ -10,12 +10,12 @@ import SwiftUI
 
 struct ContentView: View {
     @ObservedObject var locationManager: LocationManager
-    @ObservedObject var model: Model
+    @ObservedObject var viewModel: ViewModel
     @State private var pickerItem: PhotosPickerItem?
     
     init(locationManager: LocationManager = LocationManager()) {
         self.locationManager = locationManager
-        self.model = Model(locationManager: locationManager)
+        self.viewModel = ViewModel(locationManager: locationManager)
     }
     
     var body: some View {
@@ -24,27 +24,23 @@ struct ContentView: View {
             ScrollView() {
                 Text("Oyster Identification")
                     .font(Font.system(size: 36, weight: .bold))
-                    .foregroundStyle(Color.text)
+                    .foregroundStyle(Color(UIColor.darkGray))
                     .padding(.top, 60)
                     .padding(.bottom, 5)
                     .accessibilityLabel("Oyster Identification")
-                LocationView(locationManager: locationManager, model: model)
-                Spacer()
-                    .frame(height: 30)
-                if let image = model.image {
+                LocationView(locationManager: locationManager, viewModel: viewModel)
+                Spacer().frame(height: 30)
+                if let image = viewModel.image {
                     HStack {
-                        Text("")
-                            .padding(.leading, 50)
-                            .foregroundStyle(Color.background)
+                        Text("").padding(.leading, 50).foregroundStyle(Color.background)
                         Spacer()
-                        Text("Picture:")
-                            .foregroundStyle(Color.text)
+                        Text("Picture:").foregroundStyle(Color(UIColor.darkGray))
                         Spacer()
                         Button {
                             reset()
                         } label: {
                             Image(systemName: "xmark")
-                                .foregroundStyle(Color.text)
+                                .foregroundStyle(Color(UIColor.darkGray))
                         }
                         .padding(.trailing, 15)
                     }
@@ -54,7 +50,7 @@ struct ContentView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 5))
                         .frame(width: dimensionForDevice(), height: dimensionForDevice())
                         .padding(.bottom, 15)
-                    OutcomeView(model: model)
+                    OutcomeView(viewModel: viewModel)
                 } else {
                     Spacer().frame(height: 180)
                     PhotosPicker("Tap to select picture", selection: $pickerItem)
@@ -64,15 +60,15 @@ struct ContentView: View {
             .font(Font.system(size: 24))
         }
         .onAppear() {
-            let task = URLSession.shared.dataTask(with: URLRequest(url: URL(string: "https://render-4ezx.onrender.com/")!))
+            let task = URLSession.shared.dataTask(with: URLRequest(url: URL(string: "https://www.example.com/")!))
             task.resume()
         }
         .onChange(of: pickerItem) {
             Task {
-                model.image = try await pickerItem?.loadTransferable(type: Image.self)
+                viewModel.image = try await pickerItem?.loadTransferable(type: Image.self)
                 Task {
-                    guard let _ = model.image else { return }
-                    await model.requestInfo()
+                    guard let _ = viewModel.image else { return }
+                    await viewModel.requestInfo()
                 }
             }
         }
@@ -83,7 +79,7 @@ struct ContentView: View {
     }
     
     private func reset() {
-        model.reset()
+        viewModel.reset()
         pickerItem = PhotosPickerItem(itemIdentifier: "\(UUID())")
     }
 }

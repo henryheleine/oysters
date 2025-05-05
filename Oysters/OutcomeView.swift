@@ -9,27 +9,23 @@ import Foundation
 import SwiftUI
 
 struct OutcomeView: View {
-    @ObservedObject var model: Model
+    @ObservedObject var viewModel: ViewModel
     @State var content: String?
     
     var body: some View {
         VStack {
-            Text("Response:")
-                .padding(.bottom, 2)
-                .padding(.top, 10)
+            Text("Response:").padding(15)
             if let content = content {
-                Text(content)
-                    .accessibilityLabel(content)
-                    .padding([.bottom, .leading, .trailing], 15)
+                Text(content).accessibilityLabel(content).padding([.bottom, .leading, .trailing], 15)
             } else {
-                ProgressView()
+                ProgressView().colorScheme(.light).padding(.bottom, 15)
             }
         }
         .background(Color.outcome)
         .clipShape(RoundedRectangle(cornerRadius: 5))
-        .foregroundStyle(Color.background)
+        .foregroundStyle(Color(UIColor.darkGray))
         .padding([.leading, .trailing], 15)
-        .onReceive(model.$response) { response in
+        .onReceive(viewModel.$response) { response in
             if let response = response {
                 content = response.content
             }

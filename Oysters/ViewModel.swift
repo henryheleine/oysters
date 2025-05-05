@@ -1,5 +1,5 @@
 //
-//  Model.swift
+//  ViewModel.swift
 //  Oysters
 //
 //  Created by Henry Heleine on 3/20/25.
@@ -9,9 +9,8 @@ import Combine
 import Foundation
 import SwiftUI
 
-class Model: ObservableObject {
-    private var cancellables = Set<AnyCancellable>()
-    private var json = [String: String]()
+class ViewModel: ObservableObject {
+    var cancellables = Set<AnyCancellable>()
     @Published var image: Image?
     @Published var response: OpenApiResponse?
     @ObservedObject var locationManager: LocationManager
@@ -22,21 +21,18 @@ class Model: ObservableObject {
          response: OpenApiResponse? = nil,
          locationManager: LocationManager) {
         self.cancellables = cancellables
-        self.json = json
         self.image = image
         self.response = response
         self.locationManager = locationManager
     }
     
-    func requestInfo() async {
+    func requestInfo(completion: (() -> Void)? = nil) async {
         do {
-            var request = URLRequest(url: URL(string: "https://render-4ezx.onrender.com/data")!)
+            var request = URLRequest(url: URL(string: "https://www.example.com/data")!) // TODO: replace with final url and refactor into a "NetworkService"
             request.httpMethod = "POST"
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            var json = (locationManager.country != "Unknown") ? ["country": locationManager.country] : [String: String]()
             json["imageData"] = await base64(fromImage: image)
-            if locationManager.country != "Unknown" {
-                json["country"] = locationManager.country
-            }
             let jsonData = try JSONEncoder().encode(json)
             request.httpBody = jsonData
             
@@ -57,12 +53,18 @@ class Model: ObservableObject {
                             break
                         case .failure(_):
                             weakSelf.updateErrorResponse()
+                            if let completion = completion {
+                                completion()
+                            }
                             break
                         }
                     },
                     receiveValue: { response in
                         Task { @MainActor in
                             self.response = response
+                            if let completion = completion {
+                                completion()
+                            }
                         }
                     }
                 )
@@ -75,9 +77,10 @@ class Model: ObservableObject {
     @MainActor func base64(fromImage: Image?) async -> String {
         let render = ImageRenderer(content: image?.resizable().frame(width: 250, height: 250))
         render.isOpaque = true
-        let uiImage = render.uiImage!
-        if let data = uiImage.jpegData(compressionQuality: 1) {
-            return data.base64EncodedString()
+        if let uiImage = render.uiImage {
+            if let data = uiImage.jpegData(compressionQuality: 1) {
+                return data.base64EncodedString()
+            }
         }
         return ""
     }
