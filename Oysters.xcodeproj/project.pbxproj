@@ -40,6 +40,7 @@
 			membershipExceptions = (
 				LocationManager.swift,
 				LocationView.swift,
+				"NSNotification+Extensions.swift",
 				OpenApiResponse.swift,
 				ViewModel.swift,
 			);

@@ -12,10 +12,12 @@ import XCTest
 
 class OystersTests: XCTestCase {
     private var locationManager: LocationManager!
+    private var oysterUpdateDidFire = false
     
     override func setUp() {
         super.setUp()
         locationManager = LocationManager()
+        NotificationCenter.default.addObserver(self, selector: #selector(oysterUpdate), name: NSNotification.oysterUpdate, object: nil)
     }
     
     func testValidRequestWithImage() {
@@ -24,36 +26,33 @@ class OystersTests: XCTestCase {
         
         viewModel.image = Image("TestOyster")
         Task {
-            await viewModel.requestInfo(completion: {
+            await viewModel.fetchStream { result in
                 expectation.fulfill()
-            })
+            }
         }
         
         waitForExpectations(timeout: 30)
         
-        let response = viewModel.response?.content.lowercased() ?? ""
-        
-        XCTAssertTrue(response.contains("characteristics"))
-        XCTAssertTrue(response.contains("oyster"))
-        
-        viewModel.cancellables.first?.cancel()
+        XCTAssertTrue(oysterUpdateDidFire)
     }
     
     func testInvalidRequestWithoutImage() {
         let expectation = self.expectation(description: "Test valid async network request with image")
         let viewModel = ViewModel(locationManager: locationManager)
-        
         // viewModel.image = nil
         Task {
-            await viewModel.requestInfo(completion: {
+            await viewModel.fetchStream { result in
                 expectation.fulfill()
-            })
+            }
         }
         
         waitForExpectations(timeout: 30)
         
         XCTAssertNil(viewModel.response)
-        
-        viewModel.cancellables.first?.cancel()
+        XCTAssertFalse(oysterUpdateDidFire)
+    }
+    
+    func oysterUpdate() {
+        oysterUpdateDidFire = true
     }
 }

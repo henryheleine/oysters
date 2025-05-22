@@ -68,7 +68,9 @@ struct ContentView: View {
                 viewModel.image = try await pickerItem?.loadTransferable(type: Image.self)
                 Task {
                     guard let _ = viewModel.image else { return }
-                    await viewModel.requestInfo()
+                    await viewModel.fetchStream { result in
+                        // print(result)
+                    }
                 }
             }
         }

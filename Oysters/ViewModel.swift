@@ -10,67 +10,46 @@ import Foundation
 import SwiftUI
 
 class ViewModel: ObservableObject {
-    var cancellables = Set<AnyCancellable>()
     @Published var image: Image?
     @Published var response: OpenApiResponse?
     @ObservedObject var locationManager: LocationManager
     
-    init(cancellables: Set<AnyCancellable> = Set<AnyCancellable>(),
-         json: [String : String] = [String: String](),
+    init(json: [String : String] = [String: String](),
          image: Image? = nil,
          response: OpenApiResponse? = nil,
          locationManager: LocationManager) {
-        self.cancellables = cancellables
         self.image = image
         self.response = response
         self.locationManager = locationManager
     }
     
-    func requestInfo(completion: (() -> Void)? = nil) async {
+    func fetchStream(completion: @escaping (Result<OpenApiResponse?, Error>) -> ()) async {
+        guard let url = URL(string: "https://render-4ezx.onrender.com/stream") else { return } // TODO: replace with final url and refactor into a "NetworkService"
         do {
-            var request = URLRequest(url: URL(string: "https://www.example.com/data")!) // TODO: replace with final url and refactor into a "NetworkService"
-            request.httpMethod = "POST"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            var json = (locationManager.country != "Unknown") ? ["country": locationManager.country] : [String: String]()
-            json["imageData"] = await base64(fromImage: image)
+            var request = URLRequest(url: url)
+            let json = ["imageData": await base64(fromImage: image)]
             let jsonData = try JSONEncoder().encode(json)
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("chunked", forHTTPHeaderField: "Transfer-Encoding")
+            request.addValue("keep-alive", forHTTPHeaderField: "Connection")
             request.httpBody = jsonData
-            
-            URLSession.shared.dataTaskPublisher(for: request)
-                .tryMap { element -> Data in
-                    guard let response = element.response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
-                        throw URLError(.badServerResponse)
-                    }
-                    return element.data
+            request.httpMethod = "POST"
+            let (bytes, response) = try await URLSession.shared.bytes(for: request)
+            guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+                return completion(.failure(NSError(domain: "Error with response status code", code: -1)))
+            }
+            var iterator = bytes.makeAsyncIterator()
+            while let byte = try await iterator.next() {
+                var data = Data()
+                data.append(byte)
+                let chunk = String(data: data, encoding: .utf8) ?? ""
+                Task { @MainActor in
+                    NotificationCenter.default.post(name: NSNotification.oysterUpdate, object: chunk)
                 }
-                .decode(type: OpenApiResponse.self, decoder: JSONDecoder())
-                .eraseToAnyPublisher()
-                .sink(
-                    receiveCompletion: { [weak self] status in
-                        guard let weakSelf = self else { return }
-                        switch status {
-                        case .finished:
-                            break
-                        case .failure(_):
-                            weakSelf.updateErrorResponse()
-                            if let completion = completion {
-                                completion()
-                            }
-                            break
-                        }
-                    },
-                    receiveValue: { response in
-                        Task { @MainActor in
-                            self.response = response
-                            if let completion = completion {
-                                completion()
-                            }
-                        }
-                    }
-                )
-                .store(in: &cancellables)
-        } catch _ {
-            updateErrorResponse()
+            }
+            completion(.success(nil))
+        } catch let error {
+            completion(.failure(error))
         }
     }
     
@@ -88,7 +67,6 @@ class ViewModel: ObservableObject {
     func reset() {
         image = nil
         response = nil
-        cancellables.first?.cancel()
     }
     
     private func updateErrorResponse() {
