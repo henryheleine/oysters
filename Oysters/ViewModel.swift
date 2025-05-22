@@ -24,7 +24,7 @@ class ViewModel: ObservableObject {
     }
     
     func fetchStream(completion: @escaping (Result<OpenApiResponse?, Error>) -> ()) async {
-        guard let url = URL(string: "https://render-4ezx.onrender.com/stream") else { return } // TODO: replace with final url and refactor into a "NetworkService"
+        guard let url = URL(string: "https://www.example.com/stream") else { return } // TODO: replace with final url and refactor into a "NetworkService"
         do {
             var request = URLRequest(url: url)
             let json = ["imageData": await base64(fromImage: image)]
